@@ -1,0 +1,33 @@
+package ${package}.service;
+
+import ${package}.entity.${className}Entity;
+
+import java.util.List;
+import java.util.Map;
+
+
+/**
+ * ${comments}
+ * 
+ * @author ${author}
+ * @email ${email}
+ * @date ${datetime}
+ */
+public interface ${className}Service {
+	
+	${className}Entity queryObject(${pk.attrType} ${pk.attrname});
+	
+	PageBean<${className}ResultVo> queryList(${className}SearchVo searchVo);
+	
+	int queryTotal(Map<String, Object> map);
+	
+	int save(RmUserEntity user,${className}SaveVo saveVo) throws Exception;
+
+	void update(RmUserEntity user,${className}UpdateVo updateVo) throws Exception;
+	
+	void delete(${pk.attrType} ${pk.attrname});
+	
+	void deleteBatch(RmUserEntity user,Long[] ids);
+
+	Response<${className}ResultVo> query${className}Info(Long id) throws Exception;
+}

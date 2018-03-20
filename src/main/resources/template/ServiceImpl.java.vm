@@ -1,0 +1,93 @@
+package ${package}.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import ${package}.dao.${className}Dao;
+import ${package}.entity.${className}Entity;
+import ${package}.service.${className}Service;
+
+
+
+@Service("${classname}Service")
+public class ${className}ServiceImpl implements ${className}Service {
+	@Autowired
+	private ${className}Dao ${classname}Dao;
+	
+	@Override
+	public ${className}Entity queryObject(${pk.attrType} ${pk.attrname}){
+		return ${classname}Dao.queryObject(${pk.attrname});
+	}
+	
+	@Override
+	public PageBean<${className}ResultVo> queryList(${className}SearchVo searchVo){
+		PageHelper.startPage(searchVo.getPage(),searchVo.getLimit());
+		PageInfo<${className}ResultVo> pageInfo = new PageInfo<>(${classname}Dao.query${className}List(searchVo));
+		PageBean<${className}ResultVo> pageBean = new PageBean<>();
+		//设置记录总数
+		pageBean.setCount(new Long(pageInfo.getTotal()).intValue());
+		//设置每页显示记录数
+		pageBean.setLimit(pageInfo.getPageSize());
+		//设置当前页数
+		pageBean.setCurr(searchVo.getPage());
+		//设置数据
+		pageBean.setData(pageInfo.getList());
+		//设置状态码
+		pageBean.setCode(HttpStatus.SC_OK);
+		//设置返回信息
+		pageBean.setMsg("查询成功");
+		return pageBean;
+	}
+	
+	@Override
+	public int queryTotal(Map<String, Object> map){
+		return ${classname}Dao.queryTotal(map);
+	}
+	
+	@Override
+	public int save(RmUserEntity user,${className}SaveVo saveVo)throws Exception{
+        ${className}Entity ${classname} = new ${className}Entity();
+		PropertyUtils.copyProperties(${classname},saveVo);
+		${classname}.setCreator(user.getId());
+		${classname}.setCreateTime(new Date());
+		${classname}.setModifier(user.getId());
+		${classname}.setModifyTime(new Date());
+		return ${classname}Dao.save(${classname});
+	}
+	
+	@Override
+	public void update(RmUserEntity user,${className}UpdateVo updateVo) throws Exception{
+		${className}Entity ${classname} = ${classname}Dao.queryObject(updateVo.getId());
+		if(${classname} == null){
+			throw new Exception("该XX不存在");
+		}
+		PropertyUtils.copyProperties(${classname},updateVo);
+		${classname}.setModifier(user.getId());
+		${classname}.setModifyTime(new Date());
+		${classname}Dao.update(${classname});
+	}
+	
+	@Override
+	public void delete(${pk.attrType} ${pk.attrname}){
+		${classname}Dao.delete(${pk.attrname});
+	}
+	
+	@Override
+	public void deleteBatch(RmUserEntity user,Long[] ids){
+		${classname}Dao.deleteBatch(ids);
+	}
+
+	@Override
+	public Response<${className}ResultVo> query${className}Info(Long id) throws Exception{
+		Response<${className}ResultVo> response = new Response<>();
+        ${className}ResultVo resultVo = new ${className}ResultVo();
+        ${className}Entity ${classname} = ${classname}Dao.queryObject(id);
+		PropertyUtils.copyProperties(resultVo,${classname});
+		response.setData(resultVo);
+		response.setCode(HttpStatus.SC_OK);
+		return response;
+	}
+}
